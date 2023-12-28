@@ -34,3 +34,11 @@ build/*
 *.exe
 *.out
 *.app
+
+# clangd
+.cache/
+.clang-format
+compile_commands.json
+
+# docs
+docs/
