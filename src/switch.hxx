@@ -1,7 +1,8 @@
 #ifndef SWITCH_HXX
 #define SWITCH_HXX
 
-#include "types.hxx"
+#include <cstdint>
+#include <unordered_map>
 
 class SwitchBase
 {
@@ -17,6 +18,15 @@ extern SwitchBase *CreateSwitchObject();
 extern int PackFrame(char *unpacked_frame, char *packed_frame, int frame_length);
 extern int UnpackFrame(char *unpacked_frame, char *packed_frame, int frame_length);
 
-// TODO : Implement your switch class.
+class Switch : public SwitchBase
+{
+private:
+    int ports{0};
+    std::unordered_map<std::uint64_t, std::pair<int, int>> table;
+
+public:
+    void InitSwitch(int numPorts) override;
+    int ProcessFrame(int inPort, char *framePtr) override;
+};
 
 #endif
