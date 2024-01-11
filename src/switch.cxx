@@ -13,7 +13,7 @@
 #include <string_view>
 #include <utility>
 
-// #define USE_STD_FUNCTIONS
+#define USE_STD_FUNCTIONS
 
 SwitchBase *CreateSwitchObject() { return new Switch; }
 
@@ -24,7 +24,7 @@ int PackFrame(char *unpacked_frame, char *packed_frame, int frame_length)
     os << std::quoted<char>(std::string_view(unpacked_frame, frame_length), FRAME_DELI,
                             FRAME_DELI);
     std::string s{os.str()};
-    std::uint8_t xor_result{static_cast<uint8_t>(
+    std::uint8_t xor_result{static_cast<std::uint8_t>(
         std::reduce(s.begin(), s.end() - 1, '\0', std::bit_xor<char>()))};
     s.back() = std::popcount(xor_result) % 2 != 0 ? '\1' : '\0';
     std::memcpy(packed_frame, s.c_str(), s.length());
@@ -32,7 +32,7 @@ int PackFrame(char *unpacked_frame, char *packed_frame, int frame_length)
 #else
     std::uint8_t *packed_ptr{reinterpret_cast<std::uint8_t *>(packed_frame)};
     std::uint8_t *unpacked_ptr{reinterpret_cast<std::uint8_t *>(unpacked_frame)};
-    std::size_t unpacked_size{static_cast<size_t>(frame_length)};
+    std::size_t unpacked_size{static_cast<std::size_t>(frame_length)};
     std::uint8_t xor_result{FRAME_DELI};
     packed_ptr[0] = FRAME_DELI;
     std::size_t process_ptr{1};
@@ -62,7 +62,7 @@ int UnpackFrame(char *unpacked_frame, char *packed_frame, int frame_length)
 #ifdef USE_STD_FUNCTIONS
     if (static_cast<std::uint8_t>(packed_frame[0]) != FRAME_DELI)
         return -1;
-    std::uint8_t xor_result{static_cast<uint8_t>(std::reduce(
+    std::uint8_t xor_result{static_cast<std::uint8_t>(std::reduce(
         packed_frame, packed_frame + frame_length, '\0', std::bit_xor<char>()))};
     if (std::popcount(xor_result) % 2 != 0)
         return -1;
@@ -76,7 +76,7 @@ int UnpackFrame(char *unpacked_frame, char *packed_frame, int frame_length)
 #else
     std::uint8_t *packed_ptr{reinterpret_cast<std::uint8_t *>(packed_frame)};
     std::uint8_t *unpacked_ptr{reinterpret_cast<std::uint8_t *>(unpacked_frame)};
-    std::size_t packed_size{static_cast<size_t>(frame_length - 1)};
+    std::size_t packed_size{static_cast<std::size_t>(frame_length - 1)};
     std::size_t process_ptr{0};
     bool de_flag{false};
     std::uint8_t xor_result{FRAME_DELI};
