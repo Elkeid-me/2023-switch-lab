@@ -1,19 +1,21 @@
 #include "switch.hxx"
 #include "types.hxx"
-#include <algorithm>
 #include <bit>
-#include <cstddef>
 #include <cstdint>
 #include <cstring>
+#include <utility>
+
+#include <cstddef>
+
+#include <algorithm>
 #include <functional>
 #include <iomanip>
 #include <numeric>
 #include <sstream>
 #include <string>
 #include <string_view>
-#include <utility>
 
-#define USE_STD_FUNCTIONS
+// #define USE_STD_FUNCTIONS
 
 SwitchBase *CreateSwitchObject() { return new Switch; }
 
@@ -102,9 +104,7 @@ int UnpackFrame(char *unpacked_frame, char *packed_frame, int frame_length)
         }
     }
     xor_result ^= packed_ptr[packed_size];
-    if (std::popcount(xor_result) % 2 != 0)
-        return -1;
-    return process_ptr;
+    return std::popcount(xor_result) % 2 == 0 ? process_ptr : -1;
 #endif
 }
 
@@ -116,8 +116,6 @@ int Switch::ProcessFrame(int inPort, char *framePtr)
         return -1;
     ether_header *header{reinterpret_cast<ether_header *>(framePtr)};
     std::uint64_t src{header->get_src()}, dst{header->get_dst()};
-    if (src == dst)
-        return -1;
     auto outport_iter{table.find(dst)};
     switch (header->get_type())
     {
