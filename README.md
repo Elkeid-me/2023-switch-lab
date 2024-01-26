@@ -1,1 +1,3 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-24ddc0f5d75046c5622901739e7c5dd533143b0c8e959d652212380cedb1ea36.svg)](https://classroom.github.com/a/mUzf3GgF)
+# 2023-switch-lab
+
+某大学计算机网络 Lab 4. 本仓库包含两个版本：一个大量使用标准库函数（如 `std::quoted()`），一个大部分手搓.
